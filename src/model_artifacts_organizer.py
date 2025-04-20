@@ -112,24 +112,27 @@ class ModelArtifactOrganizer:
         notebook_path = f"{self.volume_path}/{self.model}/notebooks"
         output_path = f"{self.volume_path}{self.model}/"
 
-        files = [
-            f
-            for f in os.listdir(notebook_path)
-            if f.endswith(".ipynb") or f.endswith(".py")
-        ]
-        for f in files:
-            if f.endswith(".ipynb"):
-                with open(f"{notebook_path}/{f}", "r", encoding="utf-8") as nb_file:
-                    notebook_content = nbformat.read(nb_file, as_version=4)
-            else:
-                with open(f"{notebook_path}/{f}", "r", encoding="utf-8") as py_file:
-                    notebook_content = py_file.read()
+        if os.path.isdir(notebook_path):
+            files = [
+                f
+                for f in os.listdir(notebook_path)
+                if f.endswith(".ipynb") or f.endswith(".py")
+            ]
+            for f in files:
+                if f.endswith(".ipynb"):
+                    with open(f"{notebook_path}/{f}", "r", encoding="utf-8") as nb_file:
+                        notebook_content = nbformat.read(nb_file, as_version=4)
+                else:
+                    with open(f"{notebook_path}/{f}", "r", encoding="utf-8") as py_file:
+                        notebook_content = py_file.read()
 
-            # Convert to markdown
-            markdown_exporter = MarkdownExporter()
-            markdown_content, _ = markdown_exporter.from_notebook_node(notebook_content)
+                # Convert to markdown
+                markdown_exporter = MarkdownExporter()
+                markdown_content, _ = markdown_exporter.from_notebook_node(notebook_content)
 
-            # Write to markdown file
-            output_file = f"{output_path}/{f.replace('.ipynb', '.md')}"
-            with open(output_file, "w", encoding="utf-8") as md_file:
-                md_file.write(markdown_content)
+                # Write to markdown file
+                output_file = f"{output_path}/{f.replace('.ipynb', '.md')}"
+                with open(output_file, "w", encoding="utf-8") as md_file:
+                    md_file.write(markdown_content)
+
+        return
