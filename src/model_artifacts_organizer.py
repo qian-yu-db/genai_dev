@@ -128,7 +128,9 @@ class ModelArtifactOrganizer:
 
                 # Convert to markdown
                 markdown_exporter = MarkdownExporter()
-                markdown_content, _ = markdown_exporter.from_notebook_node(notebook_content)
+                markdown_content, _ = markdown_exporter.from_notebook_node(
+                    notebook_content
+                )
 
                 # Write to markdown file
                 output_file = f"{output_path}/{f.replace('.ipynb', '.md')}"
